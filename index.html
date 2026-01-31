@@ -1,184 +1,613 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Guardián Fénix</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#fdf2f2;color:#333;}
-header{background:linear-gradient(90deg,#8b0000,#c62828);color:#fff;padding:15px;text-align:center;}
-.nav{display:flex;background:#8b0000;}
-.nav button{flex:1;padding:12px;border:none;background:#8b0000;color:#fff;font-weight:bold;cursor:pointer;}
-.nav button.active{background:#c62828;}
-.section{display:none;padding:10px;}
-.section.active{display:block;}
-.card{background:#fff;padding:22px;margin:16px 12px;border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,.15);line-height:1.6;}
-.logo{width:70%;max-width:280px;display:block;margin:16px auto;}
+
+body{
+
+  font-family:Arial,Helvetica,sans-serif;
+
+  margin:0;
+
+  background:#fdf2f2;
+
+  color:#333;
+
+}
+
+header{
+
+  background:linear-gradient(90deg,#8b0000,#c62828);
+
+  color:#fff;
+
+  padding:15px;
+
+  text-align:center;
+
+}
+
+.nav{
+
+  display:flex;
+
+  background:#8b0000;
+
+}
+
+.nav button{
+
+  flex:1;
+
+  padding:12px;
+
+  border:none;
+
+  background:#8b0000;
+
+  color:#fff;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+.nav button.active{
+
+  background:#c62828;
+
+}
+
+.section{
+
+  display:none;
+
+  padding:10px;
+
+}
+
+.section.active{
+
+  display:block;
+
+}
+.card{
+  background:#fff;
+  padding:22px 20px;
+  margin:16px 12px;
+  border-radius:16px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+  line-height:1.6;
+  
+}
+.logo{
+  width:70%;
+  max-width:280px;
+  display:block;
+  margin:16px auto;
+}
 h2{color:#8b0000}
+
 .data{margin:6px 0}
-button.action{background:#c62828;color:#fff;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;margin-top:8px;}
+  
+button.action{
+
+  background:#c62828;
+
+  color:#fff;
+
+  border:none;
+
+  padding:10px 15px;
+
+  border-radius:5px;
+
+  cursor:pointer;
+
+  margin-top:8px;
+
+}
+
 button.action:hover{background:#8b0000}
-.alerta{display:none;background:#fdeaea;border-left:6px solid #c62828;padding:15px;margin-top:12px;font-weight:bold;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border:1px solid #ccc;padding:6px;text-align:center;}
-th{background:#c62828;color:#fff;}
+
+.alerta{
+
+  display:none;
+
+  background:#fdeaea;
+
+  border-left:6px solid #c62828;
+
+  padding:15px;
+
+  margin-top:12px;
+
+  font-weight:bold;
+
+}
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  margin-top:10px;
+
+}
+
+th,td{
+
+  border:1px solid #ccc;
+
+  padding:6px;
+
+  text-align:center;
+
+}
+
+th{
+
+  background:#c62828;
+
+  color:#fff;
+
+}
+
 </style>
+
 </head>
+
 <body>
 
 <header>
-<h1>🛡️ Guardián Fénix 🔥</h1>
-<img src="freepik_23c11d8d-723a-469e-ae09-1d9d4a639e0a.png" alt="Logo" class="logo">
-<p>Monitoreo ambiental y de vibración con ESP32</p>
+
+<h1>🛡️ Guardián Fénix 🔥</h1><img
+<img src="freepik_23c11d8d-723a-469e-ae09-1d9d4a639e0a.png"
+     alt="Guardián Fénix"
+     class="logo">
+<p>Prototipo de monitoreo ambiental y vibración</p>
+
 </header>
 
 <div class="nav">
-  <button class="active" onclick="mostrar('sensores',this)">Sensores</button>
+
+  <button class="active" onclick="mostrar('inicio',this)">Inicio</button>
+
+  <button onclick="mostrar('sensores',this)">Sensores</button>
+
   <button onclick="mostrar('graficas',this)">Gráficas</button>
+
+</div>
+
+<!-- INICIO -->
+
+<div id="inicio" class="section active">
+
+  <div class="card">
+
+    <h2>Descripción del proyecto</h2>
+
+    <p>
+
+      Guardián Fénix es un prototipo de monitoreo diseñado para sitios remotos
+
+      sin infraestructura eléctrica. El sistema simula sensores físicos
+
+      utilizando los sensores del teléfono móvil.
+
+    </p>
+
+    <p>
+
+      La batería del dispositivo representa la batería de respaldo del sistema,
+
+      mientras que la conexión a una fuente eléctrica simula un panel solar activo.
+
+    </p>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Estado de energía</h2>
+
+    <p class="data">Batería del sistema: <span id="bat">--</span>%</p>
+
+    <p class="data">Fuente de energía: <span id="energia">--</span></p>
+
+  </div>
+
 </div>
 
 <!-- SENSORES -->
-<div id="sensores" class="section active">
+
+<div id="sensores" class="section">
+
   <div class="card">
-    <h2>🌿 Sensor Ambiental</h2>
+
+    <h2>Sensor Ambiental</h2>
+
     <p class="data">Temperatura: <span id="temp">--</span> °C</p>
+
     <p class="data">Humedad: <span id="hum">--</span> %</p>
+
     <p class="data">Presión: <span id="pres">--</span> hPa</p>
-    <p class="data">Gas: <span id="gas">--</span> kΩ</p>
-    <button class="action" onclick="leerAmbiental()">Actualizar datos</button>
-    <p id="errorClima" style="color:#b00000;font-size:.85em"></p>
+
+    <button class="action" onclick="clima()">Actualizar clima</button>
+
+    <p id="errorClima" style="color:#b00000;font-size:0.85em;"></p>
+
   </div>
 
   <div class="card">
-    <h2>📳 Sensor de Vibración</h2>
+
+    <h2>Sensor de Vibración</h2>
+
     <p class="data">Vibración: <span id="vib">0.00</span></p>
+
     <p class="data">Estado: <span id="estado">Estable</span></p>
-    <button class="action" id="btnVib" onclick="toggleVib()">Aceptar registros</button>
+
+    <button class="action" id="btnVib" onclick="toggleVibracion()">Activar sensor</button>
+
     <div class="alerta" id="alerta">
-      🚨 Vibración peligrosa detectada
+
+      🚨 Vibración peligrosa detectada<br><br>
+
+      <button class="action" onclick="alertar()">Alertar usuarios cercanos</button>
+
     </div>
+
   </div>
 
   <div class="card">
-    <h2>📝 Registros manuales</h2>
+
+    <h2>Registros</h2>
+
     <table>
+
       <thead>
-        <tr><th>Hora</th><th>Temp</th><th>Hum</th><th>Pres</th><th>Gas</th><th>Vib</th><th>Estado</th></tr>
+
+        <tr>
+
+          <th>Hora</th>
+
+          <th>Temp</th>
+
+          <th>Hum</th>
+
+          <th>Pres</th>
+
+          <th>Evento</th>
+
+        </tr>
+
       </thead>
+
       <tbody id="tabla"></tbody>
+
     </table>
-    <button class="action" onclick="registrar()">Registrar lectura</button>
+
+    <button class="action" onclick="guardar()">Guardar registro</button>
+
     <button class="action" style="background:#555" onclick="borrarUltimo()">Borrar último</button>
+
   </div>
+
 </div>
 
 <!-- GRAFICAS -->
+
 <div id="graficas" class="section">
-  <div class="card"><h2>Temperatura (°C)</h2><canvas id="gTemp"></canvas></div>
-  <div class="card"><h2>Humedad (%)</h2><canvas id="gHum"></canvas></div>
-  <div class="card"><h2>Presión (hPa)</h2><canvas id="gPres"></canvas></div>
-  <div class="card"><h2>Vibración</h2><canvas id="gVib"></canvas></div>
+
+  <div class="card">
+
+    <h2>Humedad</h2>
+
+    <canvas id="gHum"></canvas>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Temperatura</h2>
+
+    <canvas id="gTemp"></canvas>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Presión</h2>
+
+    <canvas id="gPres"></canvas>
+
+  </div>
+
 </div>
 
-<script>
-const ESP32_URL="http://192.168.4.1"; // Cambia por IP de tu ESP32
+<audio id="sonido" loop>
 
-let registros = [];
-let aceptarVib = false;
-let charts = {};
+  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
+
+</audio>
+
+<script>
+
+const apiKey="729294e1fe04354f62449218961044b8";
+
+let sensorActivo=false;
+
+let alertaActiva=false;
+
+let vibracion=0;
+
+let charts={};
+
+// Navegación
 
 function mostrar(id,btn){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  btn.classList.add("active");
+
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+
+  document.getElementById(id).classList.add('active');
+
+  btn.classList.add('active');
+
+  actualizarGraficas();
+
 }
 
-async function leerAmbiental(){
+// Batería y panel solar
+
+if(navigator.getBattery){
+
+  navigator.getBattery().then(b=>{
+
+    function actualizar(){
+
+      bat.innerText=Math.round(b.level*100);
+
+      energia.innerText=b.charging?"Panel solar activo":"Batería de respaldo";
+
+    }
+
+    actualizar();
+
+    b.addEventListener("levelchange",actualizar);
+
+    b.addEventListener("chargingchange",actualizar);
+
+  });
+
+}
+
+// Clima
+
+async function clima(){
+
+  errorClima.innerText="";
+
   try{
-    const r = await fetch(`${ESP32_URL}/leer`);
-    const d = await r.json();
-    temp.textContent = d.temp;
-    hum.textContent = d.hum;
-    pres.textContent = d.pres;
-    gas.textContent = d.gas;
-    vib.textContent = d.vib;
-    estado.textContent = d.estado;
-    actualizarTabla();
-    actualizarGraficas();
+
+    const r=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=25.6866&lon=-100.3161&appid=${apiKey}&units=metric`);
+
+    const d=await r.json();
+
+    temp.innerText=Math.round(d.main.temp);
+
+    hum.innerText=d.main.humidity;
+
+    pres.innerText=d.main.pressure;
+
   }catch{
-    errorClima.textContent="No se pudo conectar al ESP32";
+
+    errorClima.innerText="No se pudo acceder al clima";
+
   }
+
 }
 
-function toggleVib(){
-  aceptarVib = !aceptarVib;
-  btnVib.textContent = aceptarVib ? "Interceptar registros" : "Aceptar registros";
+// Vibración
+
+function toggleVibracion(){
+
+  if(!sensorActivo){
+
+    window.addEventListener("devicemotion",leerVibracion);
+
+    btnVib.innerText="Desactivar sensor";
+
+  }else{
+
+    window.removeEventListener("devicemotion",leerVibracion);
+
+    btnVib.innerText="Activar sensor";
+
+  }
+
+  sensorActivo=!sensorActivo;
+
 }
 
-async function registrar(){
-  try{
-    await fetch(`${ESP32_URL}/guardar`);
-    actualizarTabla();
-    actualizarGraficas();
-  }catch{alert("Error al guardar registro");}
+function leerVibracion(e){
+
+  let x=e.accelerationIncludingGravity?.x||0;
+
+  let y=e.accelerationIncludingGravity?.y||0;
+
+  let z=e.accelerationIncludingGravity?.z||0;
+
+  vibracion=Math.sqrt(x*x+y*y+z*z).toFixed(2);
+
+  vib.innerText=vibracion;
+
+  if(vibracion>12 && !alertaActiva){
+
+    alertaActiva=true;
+
+    estado.innerText="Inestable";
+
+    alerta.style.display="block";
+
+    sonido.play();
+
+  }
+
 }
 
-async function borrarUltimo(){
-  try{
-    await fetch(`${ESP32_URL}/borrar`);
-    actualizarTabla();
-    actualizarGraficas();
-  }catch{alert("Error al borrar registro");}
+function alertar(){
+
+  alerta.style.display="none";
+
+  sonido.pause();
+
+  sonido.currentTime=0;
+
+  estado.innerText="Alerta atendida";
+
+  alertaActiva=false;
+
+  alert("Usuarios cercanos alertados");
+
 }
 
-async function actualizarTabla(){
-  try{
-    const r = await fetch(`${ESP32_URL}/data`);
-    registros = await r.json();
-    tabla.innerHTML="";
-    registros.forEach(r=>{
-      tabla.innerHTML+=`<tr>
-        <td>${r.hora[0]}:${r.hora[1]}:${r.hora[2]}</td>
-        <td>${r.temp}</td>
-        <td>${r.hum}</td>
-        <td>${r.pres}</td>
-        <td>${r.gas}</td>
-        <td>${r.vib}</td>
-        <td>${r.estado}</td>
-      </tr>`;
-    });
-  }catch{}
+// Registros
+
+function guardar(){
+
+  const r={
+
+    h:new Date().toLocaleTimeString(),
+
+    t:temp.innerText,
+
+    hu:hum.innerText,
+
+    p:pres.innerText,
+
+    e:estado.innerText
+
+  };
+
+  let d=JSON.parse(localStorage.getItem("reg"))||[];
+
+  d.push(r);
+
+  localStorage.setItem("reg",JSON.stringify(d));
+
+  cargarTabla();
+
+  actualizarGraficas();
+
 }
+
+function cargarTabla(){
+
+  tabla.innerHTML="";
+
+  (JSON.parse(localStorage.getItem("reg"))||[]).forEach(r=>{
+
+    tabla.innerHTML+=`
+
+    <tr>
+
+      <td>${r.h}</td>
+
+      <td>${r.t}</td>
+
+      <td>${r.hu}</td>
+
+      <td>${r.p}</td>
+
+      <td>${r.e}</td>
+
+    </tr>`;
+
+  });
+
+}
+
+cargarTabla();
+
+function borrarUltimo(){
+
+  let d=JSON.parse(localStorage.getItem("reg"))||[];
+
+  d.pop();
+
+  localStorage.setItem("reg",JSON.stringify(d));
+
+  cargarTabla();
+
+  actualizarGraficas();
+
+}
+
+// Gráficas automáticas
 
 function graf(id,label,data,color){
+
   if(charts[id]) charts[id].destroy();
-  charts[id] = new Chart(document.getElementById(id),{
-    type:'line',
+
+  charts[id]=new Chart(document.getElementById(id),{
+
+    type:"line",
+
     data:{
+
       labels:data.map((_,i)=>i+1),
-      datasets:[{label,label,data,borderColor:color,fill:false,tension:0.3}]
+
+      datasets:[{
+
+        label:label,
+
+        data:data,
+
+        borderColor:color,
+
+        backgroundColor:color+"33",
+
+        fill:true,
+
+        tension:0.3
+
+      }]
+
     }
+
   });
+
 }
 
-async function actualizarGraficas(){
-  try{
-    const r = await fetch(`${ESP32_URL}/data`);
-    registros = await r.json();
-    graf("gTemp","Temperatura",registros.map(x=>x.temp),"#d32f2f");
-    graf("gHum","Humedad",registros.map(x=>x.hum),"#1976d2");
-    graf("gPres","Presión",registros.map(x=>x.pres),"#388e3c");
-    graf("gVib","Vibración",registros.map(x=>x.vib),"#fbc02d");
-  }catch{}
+function actualizarGraficas(){
+
+  const d=JSON.parse(localStorage.getItem("reg"))||[];
+
+  graf("gHum","Humedad (%)",d.map(x=>x.hu),"#1976d2");
+
+  graf("gTemp","Temperatura (°C)",d.map(x=>x.t),"#d32f2f");
+
+  graf("gPres","Presión (hPa)",d.map(x=>x.p),"#388e3c");
+
 }
 
-// Actualización automática cada 3s
-setInterval(leerAmbiental,3000);
-setInterval(actualizarGraficas,3000);
-setInterval(actualizarTabla,3000);
 </script>
 
 </body>
-</html>
+
+  </html>
