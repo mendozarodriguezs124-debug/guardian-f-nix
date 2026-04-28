@@ -1,613 +1,620 @@
-<!DOCTYPE html>
-
-<html lang="es">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Guardián Fénix</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-
-body{
-
-  font-family:Arial,Helvetica,sans-serif;
-
-  margin:0;
-
-  background:#fdf2f2;
-
-  color:#333;
-
-}
-
-header{
-
-  background:linear-gradient(90deg,#8b0000,#c62828);
-
-  color:#fff;
-
-  padding:15px;
-
-  text-align:center;
-
-}
-
-.nav{
-
-  display:flex;
-
-  background:#8b0000;
-
-}
-
-.nav button{
-
-  flex:1;
-
-  padding:12px;
-
-  border:none;
-
-  background:#8b0000;
-
-  color:#fff;
-
-  font-weight:bold;
-
-  cursor:pointer;
-
-}
-
-.nav button.active{
-
-  background:#c62828;
-
-}
-
-.section{
-
-  display:none;
-
-  padding:10px;
-
-}
-
-.section.active{
-
-  display:block;
-
-}
-.card{
-  background:#fff;
-  padding:22px 20px;
-  margin:16px 12px;
-  border-radius:16px;
-  box-shadow:0 4px 10px rgba(0,0,0,.15);
-  line-height:1.6;
-  
-}
-.logo{
-  width:70%;
-  max-width:280px;
-  display:block;
-  margin:16px auto;
-}
-h2{color:#8b0000}
-
-.data{margin:6px 0}
-  
-button.action{
-
-  background:#c62828;
-
-  color:#fff;
-
-  border:none;
-
-  padding:10px 15px;
-
-  border-radius:5px;
-
-  cursor:pointer;
-
-  margin-top:8px;
-
-}
-
-button.action:hover{background:#8b0000}
-
-.alerta{
-
-  display:none;
-
-  background:#fdeaea;
-
-  border-left:6px solid #c62828;
-
-  padding:15px;
-
-  margin-top:12px;
-
-  font-weight:bold;
-
-}
-
-table{
-
-  width:100%;
-
-  border-collapse:collapse;
-
-  margin-top:10px;
-
-}
-
-th,td{
-
-  border:1px solid #ccc;
-
-  padding:6px;
-
-  text-align:center;
-
-}
-
-th{
-
-  background:#c62828;
-
-  color:#fff;
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<header>
-
-<h1>🛡️ Guardián Fénix 🔥</h1><img
-<img src="freepik_23c11d8d-723a-469e-ae09-1d9d4a639e0a.png"
-     alt="Guardián Fénix"
-     class="logo">
-<p>Prototipo de monitoreo ambiental y vibración</p>
-
-</header>
-
-<div class="nav">
-
-  <button class="active" onclick="mostrar('inicio',this)">Inicio</button>
-
-  <button onclick="mostrar('sensores',this)">Sensores</button>
-
-  <button onclick="mostrar('graficas',this)">Gráficas</button>
-
-</div>
-
-<!-- INICIO -->
-
-<div id="inicio" class="section active">
-
-  <div class="card">
-
-    <h2>Descripción del proyecto</h2>
-
-    <p>
-
-      Guardián Fénix es un prototipo de monitoreo diseñado para sitios remotos
-
-      sin infraestructura eléctrica. El sistema simula sensores físicos
-
-      utilizando los sensores del teléfono móvil.
-
-    </p>
-
-    <p>
-
-      La batería del dispositivo representa la batería de respaldo del sistema,
-
-      mientras que la conexión a una fuente eléctrica simula un panel solar activo.
-
-    </p>
-
-  </div>
-
-  <div class="card">
-
-    <h2>Estado de energía</h2>
-
-    <p class="data">Batería del sistema: <span id="bat">--</span>%</p>
-
-    <p class="data">Fuente de energía: <span id="energia">--</span></p>
-
-  </div>
-
-</div>
-
-<!-- SENSORES -->
-
-<div id="sensores" class="section">
-
-  <div class="card">
-
-    <h2>Sensor Ambiental</h2>
-
-    <p class="data">Temperatura: <span id="temp">--</span> °C</p>
-
-    <p class="data">Humedad: <span id="hum">--</span> %</p>
-
-    <p class="data">Presión: <span id="pres">--</span> hPa</p>
-
-    <button class="action" onclick="clima()">Actualizar clima</button>
-
-    <p id="errorClima" style="color:#b00000;font-size:0.85em;"></p>
-
-  </div>
-
-  <div class="card">
-
-    <h2>Sensor de Vibración</h2>
-
-    <p class="data">Vibración: <span id="vib">0.00</span></p>
-
-    <p class="data">Estado: <span id="estado">Estable</span></p>
-
-    <button class="action" id="btnVib" onclick="toggleVibracion()">Activar sensor</button>
-
-    <div class="alerta" id="alerta">
-
-      🚨 Vibración peligrosa detectada<br><br>
-
-      <button class="action" onclick="alertar()">Alertar usuarios cercanos</button>
-
-    </div>
-
-  </div>
-
-  <div class="card">
-
-    <h2>Registros</h2>
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>Hora</th>
-
-          <th>Temp</th>
-
-          <th>Hum</th>
-
-          <th>Pres</th>
-
-          <th>Evento</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody id="tabla"></tbody>
-
-    </table>
-
-    <button class="action" onclick="guardar()">Guardar registro</button>
-
-    <button class="action" style="background:#555" onclick="borrarUltimo()">Borrar último</button>
-
-  </div>
-
-</div>
-
-<!-- GRAFICAS -->
-
-<div id="graficas" class="section">
-
-  <div class="card">
-
-    <h2>Humedad</h2>
-
-    <canvas id="gHum"></canvas>
-
-  </div>
-
-  <div class="card">
-
-    <h2>Temperatura</h2>
-
-    <canvas id="gTemp"></canvas>
-
-  </div>
-
-  <div class="card">
-
-    <h2>Presión</h2>
-
-    <canvas id="gPres"></canvas>
-
-  </div>
-
-</div>
-
-<audio id="sonido" loop>
-
-  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
-
-</audio>
-
-<script>
-
-const apiKey="729294e1fe04354f62449218961044b8";
-
-let sensorActivo=false;
-
-let alertaActiva=false;
-
-let vibracion=0;
-
-let charts={};
-
-// Navegación
-
-function mostrar(id,btn){
-
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-
-  document.getElementById(id).classList.add('active');
-
-  btn.classList.add('active');
-
-  actualizarGraficas();
-
-}
-
-// Batería y panel solar
-
-if(navigator.getBattery){
-
-  navigator.getBattery().then(b=>{
-
-    function actualizar(){
-
-      bat.innerText=Math.round(b.level*100);
-
-      energia.innerText=b.charging?"Panel solar activo":"Batería de respaldo";
-
+# ---------------------------------------
+# MicroPython ESP32 - Guardián Fénix FINAL
+# Enviromental(BME680) + ADXL345
+# I am Guardian Fenix
+# Samuel Alexader
+# ---------------------------------------
+
+import network, socket, time,struct, math, ujson, gc
+from machine import Pin, I2C, PWM,UART
+import adxl345
+import neopixel
+
+
+# =========================
+# DFPLAYER (UART2)
+# =========================
+DF_UART_ID = 2
+DF_TX_PIN  = 21   # ESP32 TX  -> DFPlayer RX
+DF_RX_PIN  = 20   # ESP32 RX  <- DFPlayer TX (optional, but harmless)
+DF_BUSY_PIN = 47  # DFPlayer BUSY -> ESP32 GPIO (usually LOW when playing)
+DF_BAUD = 9600
+
+_START = 0x7E
+_VER   = 0xFF
+_LEN   = 0x06
+_ACK   = 0x00
+_END   = 0xEF
+
+CMD_SET_VOLUME  = 0x06
+CMD_PLAY_TRACK  = 0x03
+CMD_PLAY_FOLDER = 0x0F
+CMD_STOP        = 0x16
+CMD_RESET       = 0x0C
+
+_SoundPlayed = False
+
+def _checksum(cmd, p1, p2):
+    s = _VER + _LEN + cmd + _ACK + p1 + p2
+    c = (0 - s) & 0xFFFF
+    return (c >> 8) & 0xFF, c & 0xFF
+
+class DFPlayer:
+    def __init__(self, uart: UART, busy_pin=None):
+        self.uart = uart
+        self.busy = Pin(busy_pin, Pin.IN, Pin.PULL_UP) if busy_pin is not None else None
+        time.sleep_ms(800)
+
+    def _send(self, cmd, param=0):
+        p1 = (param >> 8) & 0xFF
+        p2 = param & 0xFF
+        ch, cl = _checksum(cmd, p1, p2)
+        frame = bytes([_START, _VER, _LEN, cmd, _ACK, p1, p2, ch, cl, _END])
+        self.uart.write(frame)
+
+    def reset(self):
+        self._send(CMD_RESET, 0)
+        time.sleep_ms(1200)
+
+    def volume(self, level):
+        level = max(0, min(30, int(level)))
+        self._send(CMD_SET_VOLUME, level)
+
+    def stop(self):
+        self._send(CMD_STOP, 0)
+
+    def play_track(self, track_num):
+        self._send(CMD_PLAY_TRACK, int(track_num))
+
+    def play_folder_file(self, folder, file):
+        folder = max(1, min(99, int(folder)))
+        file = max(1, min(255, int(file)))
+        self._send(CMD_PLAY_FOLDER, (folder << 8) | file)
+
+    def is_playing(self):
+        if self.busy is None:
+            return None
+        # Typical DFPlayer: BUSY LOW = playing, HIGH = idle
+        return self.busy.value() == 0
+
+    def wait_done(self, timeout_ms=20000):
+        """Wait for BUSY to go LOW (start) then HIGH (done)."""
+        if self.busy is None:
+            return False
+
+        t0 = time.ticks_ms()
+
+        # wait for playback to begin (BUSY goes LOW)
+        while self.busy.value() == 1:
+            if time.ticks_diff(time.ticks_ms(), t0) > 1000:
+                return False
+            time.sleep_ms(5)
+
+        # wait for playback to finish (BUSY goes HIGH)
+        while self.busy.value() == 0:
+            if time.ticks_diff(time.ticks_ms(), t0) > timeout_ms:
+                return False
+            time.sleep_ms(10)
+
+        return True
+
+
+df_uart = UART(
+    DF_UART_ID,
+    baudrate=DF_BAUD,
+    bits=8,
+    parity=None,
+    stop=1,
+    tx=Pin(DF_TX_PIN),
+    rx=Pin(DF_RX_PIN),
+    timeout=100
+)
+player = DFPlayer(df_uart, busy_pin=DF_BUSY_PIN)
+
+# =========================
+# MODBUS RTU (RS485 UART1)
+# =========================
+MB_UART_ID = 1
+MB_TX_PIN  = 45
+MB_RX_PIN  = 0
+MB_BAUD    = 9600
+
+SLAVE_ID = 10
+
+# RS485 direction pin (DE/RE tied together)
+RS485_DIR_PIN = 18
+rs485_dir = Pin(RS485_DIR_PIN, Pin.OUT)
+rs485_dir.value(0)  # receive mode
+
+mb_uart = UART(
+    MB_UART_ID,
+    baudrate=MB_BAUD,
+    bits=8,
+    parity=None,
+    stop=1,
+    tx=Pin(MB_TX_PIN),
+    rx=Pin(MB_RX_PIN),
+    timeout=200
+)
+
+def crc16(data):
+    crc = 0xFFFF
+    for b in data:
+        crc ^= b
+        for _ in range(8):
+            crc = (crc >> 1) ^ 0xA001 if (crc & 1) else (crc >> 1)
+    return crc
+
+def read_holding(start_reg, count):
+    frame = bytearray(6)
+    frame[0] = SLAVE_ID
+    frame[1] = 3  # FC03
+    frame[2] = start_reg >> 8
+    frame[3] = start_reg & 0xFF
+    frame[4] = count >> 8
+    frame[5] = count & 0xFF
+
+    frame += struct.pack("<H", crc16(frame))
+
+    # ---- transmit ----
+    rs485_dir.value(1)
+    time.sleep_us(200)
+
+    mb_uart.write(frame)
+    mb_uart.flush()
+
+    time.sleep_us(200)
+    rs485_dir.value(0)
+
+    # ---- receive ----
+    time.sleep_ms(100)
+    resp = mb_uart.read()
+
+    if not resp or len(resp) < 5:
+        return None
+
+    # basic sanity
+    if resp[0] != SLAVE_ID or resp[1] != 3:
+        return None
+
+    byte_count = resp[2]
+    if len(resp) < (3 + byte_count + 2):
+        return None
+
+    regs = []
+    for i in range(0, byte_count, 2):
+        regs.append((resp[3+i] << 8) | resp[4+i])
+    return regs
+
+
+# ----------------------
+# NeoPixel LED
+# ----------------------
+PIN_LEDS = 39
+NUM_LEDS = 90
+np = neopixel.NeoPixel(Pin(PIN_LEDS), NUM_LEDS)
+
+def npfill(color):
+    for i in range(NUM_LEDS):
+        np[i] = color
+    np.write()
+
+
+# ----------------------
+# I2C
+# ----------------------
+i2c_adxl345 = I2C(scl=Pin(15), sda=Pin(16), freq=100000)
+
+# ----------------------
+# Sensores
+# ----------------------
+acc = adxl345.ADXL345(i2c_adxl345)
+
+
+# ----------------------
+# WiFi Hotspot
+# ----------------------
+ap = network.WLAN(network.AP_IF)
+ap.active(True)
+ap.config(essid="GuardianFenix", password="12345678", authmode=3)
+while not ap.active():
+    time.sleep(0.5)
+print("✅ Hotspot activo, IP:", ap.ifconfig()[0])
+
+# ----------------------
+# Variables
+# ----------------------
+registros = []
+MAX_REG = 50
+alarma_activa = False
+alerta_sensor = ""
+
+# ----------------------
+# Función para actualizar LED según sensor
+# ----------------------
+def actualizar_led_alerta(sensor):
+    if sensor == 'vib':
+        npfill((255, 191, 0))  # naranja
+    elif sensor == 'temp':
+        npfill((255, 0, 0))    # rojo
+    elif sensor == 'hum':
+       npfill((0, 0, 255))   # azul
+    elif sensor == 'pres':
+       npfill( (0, 255, 0))    # verde
+    elif sensor == 'IAQ':
+       npfill( (128, 0, 128))    # morado
+    else:
+       npfill((0, 10, 0))     # apagado suave
+
+# ----------------------
+# Lectura de sensores
+# ----------------------
+def leer_sensores():
+    global alarma_activa, alerta_sensor
+    global _SoundPlayed
+    try:
+#       Initiate variables
+        temp = 11
+        hum  = 60
+        pres = 1000
+        IAQ  = 0
+#         Read from remote sensor (bme680) via modbus
+        regs = read_holding(0, 8)
+        if regs:
+#             Informacion del sensor ambiental
+            temp = struct.unpack(">h", struct.pack(">H", regs[4]))[0] / 100
+            hum  = regs[5] / 100
+            pres = regs[6] / 10
+#           Indice de calidad del aire
+            IAQ  = regs[7]
+    except:
+        temp = hum = pres = 0
+
+    try:
+        ax, ay, az = acc.read_g()
+        vib = round(math.sqrt(ax*ax + ay*ay + az*az), 2)
+    except:
+        ax = ay = az = vib = 0
+
+    estado = "Normal"
+    alerta_sensor = ""
+    player.volume(20)
+#     time.sleep_ms(50)
+    # Alertas menos sensibles según estadísticas normales
+    if vib > 1.1:
+        estado = "ALERTA"
+        alerta_sensor = "Vibración"
+    elif temp > 40 or temp < 10 :
+        estado = "ALERTA"
+        alerta_sensor = "Temperatura"
+    elif hum < 30 or hum > 70:
+        estado = "ALERTA"
+        alerta_sensor = "Humedad"
+    elif pres < 950 or pres > 1050:
+        estado = "ALERTA"
+        alerta_sensor = "Presión"
+    elif IAQ  > 100:
+        estado = "ALERTA"
+        alerta_sensor = "IAQ"
+
+    _Volume = 100
+    # LED y ...
+    if estado == "ALERTA":
+        alarma_activa = True
+        if alerta_sensor == "Vibración":
+            actualizar_led_alerta('vib')
+            if _SoundPlayed == False:
+                player.volume(_Volume)
+                time.sleep_ms(50)
+                player.play_folder_file(2, 160)
+                ok = player.wait_done(timeout_ms=25000)
+                _SoundPlayed = True
+#             	time.sleep(1)
+        elif alerta_sensor == "Temperatura":
+            actualizar_led_alerta('temp')
+            if _SoundPlayed == False:
+                player.volume(_Volume)
+                time.sleep_ms(50)
+                player.play_folder_file(2, 110)
+                ok = player.wait_done(timeout_ms=25000)
+                _SoundPlayed = True
+#             	time.sleep(1)
+        elif alerta_sensor == "Humedad":
+            actualizar_led_alerta('hum')
+            if _SoundPlayed == False:
+                player.volume(_Volume)
+                time.sleep_ms(50)
+                player.play_folder_file(2, 120)
+                ok = player.wait_done(timeout_ms=25000)
+                _SoundPlayed = True
+#           	time.sleep(1)
+            _SoundPlayed = True
+            
+        elif alerta_sensor == "Presión":
+            actualizar_led_alerta('pres')
+            if _SoundPlayed == False:
+                player.volume(_Volume)
+                time.sleep_ms(50)
+                player.play_folder_file(2, 130)
+                ok = player.wait_done(timeout_ms=25000)
+                _SoundPlayed = True
+#             	time.sleep(1)
+
+        elif alerta_sensor == "IAQ":
+            actualizar_led_alerta('IAQ')
+            if _SoundPlayed == False:
+                player.volume(_Volume)
+                time.sleep_ms(50)
+                player.play_folder_file(2, 150)
+                ok = player.wait_done(timeout_ms=25000)
+                _SoundPlayed = True
+#           	time.sleep(1)
+
+    else:
+        if not alarma_activa:
+            actualizar_led_alerta("normal")
+            _SoundPlayed = False
+
+    dato = {
+        "temp": temp,
+        "hum": hum,
+        "pres": pres,
+        "IAQ": IAQ,        
+        "vib": vib,
+        "ax": round(ax,2),
+        "ay": round(ay,2),
+        "az": round(az,2),
+        "estado": estado,
+        "alarma": alarma_activa,
+        "alerta_sensor": alerta_sensor
     }
 
-    actualizar();
+    registros.append(dato)
+    if len(registros) > MAX_REG:
+        registros.pop(0)
 
-    b.addEventListener("levelchange",actualizar);
+# ----------------------
+# HTML con Canvas y alerta ambiental
+# ----------------------
+def web_page():
+    return """<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardián Fénix</title>
+<style>
+body{font-family:Arial,sans-serif;margin:10px;background:#fdf2f2;color:#333}
+h1{text-align:center;color:#8b0000}
+.nav{display:flex;gap:8px;margin-bottom:12px}
+.nav button{flex:1;padding:8px;border-radius:6px;background:#c62828;color:#fff;border:none;cursor:pointer;}
+.card{display:none;background:#fff;padding:12px;margin-bottom:12px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.12);}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.stat{min-width:120px}
+.alerta{display:none;background:#c62828;color:#fff;padding:12px;margin-top:10px;text-align:center;font-weight:bold;border-radius:6px;}
+canvas{width:100%;height:200px;margin-top:10px;border:1px solid #ccc;}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th,td{border:1px solid #ccc;padding:4px;text-align:center}
+th{background:#f3d6d6}
+</style>
+</head>
+<body>
 
-    b.addEventListener("chargingchange",actualizar);
+<h1>🛡️ Guardián Fénix 🔥</h1>
 
-  });
+<div class="nav">
+<button onclick="mostrar('sensores')">Sensores</button>
+<button onclick="mostrar('graficas')">Gráficas</button>
+</div>
 
+<div id="sensores" class="card">
+<h2>🌿 Sensor Ambiental</h2>
+<div class="row">
+<div class="stat">Temp: <span id="temp">--</span> °C</div>
+<div class="stat">Hum: <span id="hum">--</span> %</div>
+<div class="stat">Pres: <span id="pres">--</span> hPa</div>
+<div class="stat">Alerta: <button id="btnAlerta">--</button></div>
+</div>
+
+<h2>📳 Vibración</h2>
+<div class="row">
+<div class="stat">Shake: <span id="shake">--</span></div>
+<div class="stat">ax: <span id="ax">--</span></div>
+<div class="stat">ay: <span id="ay">--</span></div>
+<div class="stat">az: <span id="az">--</span></div>
+<div class="stat">Estado: <span id="estado">--</span></div>
+</div>
+
+<div id="alarma" class="alerta">
+🚨 ALERTA! <button onclick="detenerAlarma()">DETENER</button>
+<audio id="alarmaAudio" loop>
+<source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEA..." type="audio/wav">
+</audio>
+</div>
+
+<h2>📝 Registros manuales</h2>
+<button onclick="guardar()">Guardar registro</button>
+<button onclick="borrarUltimo()">Borrar último</button>
+
+<table>
+<thead><tr><th>#</th><th>Hora</th><th>Temp</th><th>Hum</th><th>Pres</th><th>Shake</th><th>Estado</th></tr></thead>
+<tbody id="tabla"></tbody>
+</table>
+</div>
+
+<div id="graficas" class="card">
+<h2>📊 Gráficas Canvas</h2>
+<h3>Temperatura (°C)</h3>
+<canvas id="gTemp"></canvas>
+<h3>Humedad (%)</h3>
+<canvas id="gHum"></canvas>
+<h3>Presión (hPa)</h3>
+<canvas id="gPres"></canvas>
+<h3>Vibración (g)</h3>
+<canvas id="gVib"></canvas>
+</div>
+
+<script>
+let manualData = [];
+let liveData = [];
+
+function mostrar(id){
+  document.querySelectorAll('.card').forEach(c=>c.style.display='none');
+  document.getElementById(id).style.display='block';
 }
 
-// Clima
-
-async function clima(){
-
-  errorClima.innerText="";
-
+async function refresh(){
   try{
-
-    const r=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=25.6866&lon=-100.3161&appid=${apiKey}&units=metric`);
-
-    const d=await r.json();
-
-    temp.innerText=Math.round(d.main.temp);
-
-    hum.innerText=d.main.humidity;
-
-    pres.innerText=d.main.pressure;
-
-  }catch{
-
-    errorClima.innerText="No se pudo acceder al clima";
-
-  }
-
+    const r = await fetch('/data');
+    const d = await r.json();
+    if(!Array.isArray(d)) return;
+    const last = d[d.length-1];
+    if(last){
+      document.getElementById("temp").textContent = last.temp;
+      document.getElementById("hum").textContent = last.hum;
+      document.getElementById("pres").textContent = last.pres;
+      document.getElementById("shake").textContent = last.vib;
+      document.getElementById("ax").textContent = last.ax;
+      document.getElementById("ay").textContent = last.ay;
+      document.getElementById("az").textContent = last.az;
+      document.getElementById("estado").textContent = last.estado;
+      checkAlarma(last.estado, last.alarma, last.alerta_sensor);
+    }
+    liveData = d.slice(-50);
+    dibujarGraficas();
+  }catch(e){console.log(e);}
 }
-
-// Vibración
-
-function toggleVibracion(){
-
-  if(!sensorActivo){
-
-    window.addEventListener("devicemotion",leerVibracion);
-
-    btnVib.innerText="Desactivar sensor";
-
-  }else{
-
-    window.removeEventListener("devicemotion",leerVibracion);
-
-    btnVib.innerText="Activar sensor";
-
-  }
-
-  sensorActivo=!sensorActivo;
-
-}
-
-function leerVibracion(e){
-
-  let x=e.accelerationIncludingGravity?.x||0;
-
-  let y=e.accelerationIncludingGravity?.y||0;
-
-  let z=e.accelerationIncludingGravity?.z||0;
-
-  vibracion=Math.sqrt(x*x+y*y+z*z).toFixed(2);
-
-  vib.innerText=vibracion;
-
-  if(vibracion>12 && !alertaActiva){
-
-    alertaActiva=true;
-
-    estado.innerText="Inestable";
-
-    alerta.style.display="block";
-
-    sonido.play();
-
-  }
-
-}
-
-function alertar(){
-
-  alerta.style.display="none";
-
-  sonido.pause();
-
-  sonido.currentTime=0;
-
-  estado.innerText="Alerta atendida";
-
-  alertaActiva=false;
-
-  alert("Usuarios cercanos alertados");
-
-}
-
-// Registros
 
 function guardar(){
-
-  const r={
-
-    h:new Date().toLocaleTimeString(),
-
-    t:temp.innerText,
-
-    hu:hum.innerText,
-
-    p:pres.innerText,
-
-    e:estado.innerText
-
-  };
-
-  let d=JSON.parse(localStorage.getItem("reg"))||[];
-
-  d.push(r);
-
-  localStorage.setItem("reg",JSON.stringify(d));
-
+  manualData.push({
+    hora: new Date().toLocaleTimeString(),
+    temp: document.getElementById("temp").textContent,
+    hum: document.getElementById("hum").textContent,
+    pres: document.getElementById("pres").textContent,
+    vib: document.getElementById("shake").textContent,
+    estado: document.getElementById("estado").textContent
+  });
   cargarTabla();
-
-  actualizarGraficas();
-
 }
 
 function cargarTabla(){
-
-  tabla.innerHTML="";
-
-  (JSON.parse(localStorage.getItem("reg"))||[]).forEach(r=>{
-
-    tabla.innerHTML+=`
-
-    <tr>
-
-      <td>${r.h}</td>
-
-      <td>${r.t}</td>
-
-      <td>${r.hu}</td>
-
-      <td>${r.p}</td>
-
-      <td>${r.e}</td>
-
-    </tr>`;
-
+  const tb = document.getElementById("tabla");
+  tb.innerHTML = "";
+  manualData.forEach((r,i)=>{
+    tb.innerHTML += `<tr><td>${i+1}</td><td>${r.hora}</td><td>${r.temp}</td><td>${r.hum}</td><td>${r.pres}</td><td>${r.vib}</td><td>${r.estado}</td></tr>`;
   });
-
 }
-
-cargarTabla();
 
 function borrarUltimo(){
-
-  let d=JSON.parse(localStorage.getItem("reg"))||[];
-
-  d.pop();
-
-  localStorage.setItem("reg",JSON.stringify(d));
-
+  manualData.pop();
   cargarTabla();
-
-  actualizarGraficas();
-
 }
 
-// Gráficas automáticas
+function checkAlarma(estado, alarma, sensor){
+  const alertaDiv = document.getElementById("alarma");
+  const audio = document.getElementById("alarmaAudio");
+  const btn = document.getElementById("btnAlerta");
 
-function graf(id,label,data,color){
+  if(estado=="ALERTA" || alarma){
+    alertaDiv.style.display="block";
+    audio.play();
 
-  if(charts[id]) charts[id].destroy();
+    // Cambiar color del botón según sensor ambiental
+    if(sensor=="Temperatura") btn.style.background="#d32f2f";       // rojo
+    else if(sensor=="Humedad") btn.style.background="#1976d2";      // azul
+    else if(sensor=="Presión") btn.style.background="#388e3c";      // verde
+    else btn.style.background="#888";                               // gris
+  } else {
+    alertaDiv.style.display="none";
+    audio.pause();
+    audio.currentTime = 0;
+    btn.style.background="#888";
+  }
+  btn.textContent = sensor || "--";
+}
 
-  charts[id]=new Chart(document.getElementById(id),{
+function detenerAlarma(){
+  document.getElementById("alarma").style.display="none";
+  const audio = document.getElementById("alarmaAudio");
+  audio.pause();
+  audio.currentTime = 0;
+  fetch('/reset');
+}
 
-    type:"line",
-
-    data:{
-
-      labels:data.map((_,i)=>i+1),
-
-      datasets:[{
-
-        label:label,
-
-        data:data,
-
-        borderColor:color,
-
-        backgroundColor:color+"33",
-
-        fill:true,
-
-        tension:0.3
-
-      }]
-
-    }
-
+function dibujarGrafica(canvasId, valores, color){
+  const c = document.getElementById(canvasId);
+  const ctx = c.getContext("2d");
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  valores.forEach((v,i)=>{
+    let x = i*(c.width/valores.length);
+    let y = c.height - (v / Math.max(...valores.concat([1])) * c.height);
+    if(i==0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
   });
-
+  ctx.stroke();
 }
 
-function actualizarGraficas(){
-
-  const d=JSON.parse(localStorage.getItem("reg"))||[];
-
-  graf("gHum","Humedad (%)",d.map(x=>x.hu),"#1976d2");
-
-  graf("gTemp","Temperatura (°C)",d.map(x=>x.t),"#d32f2f");
-
-  graf("gPres","Presión (hPa)",d.map(x=>x.p),"#388e3c");
-
+function dibujarGraficas(){
+  if(liveData.length==0) return;
+  dibujarGrafica("gTemp", liveData.map(x=>x.temp), "#d32f2f");
+  dibujarGrafica("gHum", liveData.map(x=>x.hum), "#1976d2");
+  dibujarGrafica("gPres", liveData.map(x=>x.pres), "#388e3c");
+  dibujarGrafica("gVib", liveData.map(x=>x.vib), "#f57c00");
 }
 
+mostrar('sensores');
+setInterval(refresh,2000);
+refresh();
 </script>
 
 </body>
+</html>"""
 
-  </html>
+# ----------------------
+# Servidor socket
+# ----------------------
+addr = socket.getaddrinfo("0.0.0.0", 80)[0][-1]
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind(addr)
+s.listen(1)
+print("🌐 Servidor listo")
+
+def handle_client(cl):
+    global alarma_activa
+    try:
+        req = cl.recv(1024).decode()
+        if "GET /data" in req:
+            cl.send("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n")
+            cl.send(ujson.dumps(registros))
+        elif "GET /reset" in req:
+            alarma_activa = False
+            actualizar_led_alerta("normal")
+            cl.send("HTTP/1.1 200 OK\r\n\r\nOK")
+        else:
+            cl.send("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n")
+            cl.send(web_page())
+    except Exception as e:
+        print("❌ Error:", e)
+    cl.close()
+
+# ----------------------
+# Loop principal
+# ----------------------
+last_read = 0
+while True:
+    if time.ticks_ms() - last_read > 0.1:
+        leer_sensores()
+        last_read = time.ticks_ms()
+        print("Free: ", gc.mem_free())
+        print("Allocated: ", gc.mem_alloc())
+    try:
+        cl, addr = s.accept()
+        handle_client(cl)
+    except Exception as e:
+        print("❌ Socket error:", e)
+
+0
